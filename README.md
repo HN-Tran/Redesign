@@ -1,7 +1,7 @@
 # Redesign Dark
 A new look for [Anki](https://apps.ankiweb.net/).
 
-Based on and forked from https://github.com/nickdvlpr/Redesign to implement a dark mode version. All credits go to Developer Nick, check the section "License".
+Based on and forked from https://github.com/nickdvlpr/Redesign to implement a **Dark** version. All credits go to Developer Nick, check the section "License" below.
 
 <br>
 
