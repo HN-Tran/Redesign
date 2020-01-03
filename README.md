@@ -1,5 +1,5 @@
 ![Picture1](/screenshots/card.jpg)
-![Picture2](/screenshots/main.jpg
+![Picture2](/screenshots/main.jpg)
 
 # Redesign Dark
 A new look for [Anki](https://apps.ankiweb.net/).
