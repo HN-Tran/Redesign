@@ -49,8 +49,8 @@ class SharedStyles(Style):
         
         /* Note: This is Main screen, top bar, curved card */
         curvedcard, #header{
-        background-color:#eeeeee;
-        border-color:#eeeeee;
+        background-color:#333;
+        border-color:#333;
         border-radius: 0px 0px 10px 10px;
         border-width:2px;
         width: auto;
@@ -61,7 +61,7 @@ class SharedStyles(Style):
         
         /* Note: This is Main screen, top bar, text color of buttons (color) and background color of buttons (background-color). background-color should be same as in curvedcard */
         .hitem{
-        background-color: #eee;
+        background-color: #333;
         color:#888;
         font-family:%s;
         font-weight:normal;
@@ -82,7 +82,7 @@ class SharedStyles(Style):
         return """
         QMenuBar,QMenu
         {
-            background-color:#444!important;
+            background-color:#000000!important;
             color:#eee!important
         }
         QMenuBar::item
@@ -277,8 +277,8 @@ class ButtonsStyle(Style):
         button
         {{
             { self.idle }
-            background:#eee;
-            border-color:#eee;
+            background:#333;
+            border-color:#333;
             margin: 8px;
             border-radius: 40px;
             font-family:%s;
@@ -357,7 +357,7 @@ class DeckStyle(Style):
         a.deck {
             text-transform: none;
             font-size: 15px;
-            color:#212121;
+            color:#ffffff;
             background-color:""" + self.config.color_b + """;
             border-radius: 50px;
             font-family:""" + customFont + """;

@@ -138,7 +138,7 @@ class TextColor(ColorAction):
     Open color picker and set chosen color to text (in content)
     """
     name = 'color_t'
-    value = '#000000'
+    value = '#ffffff'
     label = 'Set &text color'
 
 
@@ -149,7 +149,7 @@ class BackgroundColor(ColorAction):
     Open color picker and set chosen color to background (of main window content)
     """
     name = 'color_b'
-    value = '#ffffff'
+    value = '#000000'
     label = 'Set &background color'
 
 
