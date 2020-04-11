@@ -2,8 +2,8 @@
 ![Picture2](/screenshots/main.jpg)
 
 # Redesign Dark
-_updated 11/04/2020_ 
-_Of course after several changes there are many fixes needed but for simple usage sufficient for now, maybe updated coming soon_
+_updated 11/04/2020_  
+_Of course after several changes there are many fixes needed but for simple usage sufficient for now, maybe updated coming soon_  
   
 A new look for [Anki](https://apps.ankiweb.net/).
 
