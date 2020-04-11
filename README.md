@@ -2,11 +2,22 @@
 ![Picture2](/screenshots/main.jpg)
 
 # Redesign Dark
+_updated 11/04/2020_  
+_Of course after several changes there are many fixes needed but for simple usage sufficient for now, maybe more updates coming soon_  
+  
 A new look for [Anki](https://apps.ankiweb.net/).
 
 Based on and forked from https://github.com/nickdvlpr/Redesign to implement a **Dark** version. All credits go to Developer Nick and others mentioned in the "Credits" section, check the section "License" below.
 
 <br>
+
+### Installation guide
+
+https://ankiweb.net/shared/info/1914733489
+- Go to Anki and install the extension with the code __1914733489__
+- Download/Clone this repository
+- Copy&Paste and overwrite into the extension folder of "Redesign" (usually folder name is the same as code above)
+- Enjoy!
 
 ### License
 
