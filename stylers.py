@@ -1,4 +1,5 @@
 from PyQt5.QtCore import Qt
+from PyQt5 import QtWidgets
 
 import aqt
 from anki.stats import CollectionStats
@@ -140,23 +141,24 @@ class ReviewerStyler(Styler):
     def _bottomHTML(self, reviewer, _old):
         return _old(reviewer) + style_tag(percent_escaped(self.bottom_css))
 
-    
-    
+
+
     @property
     def bottom_css(self):
         return self.buttons.html + self.shared.colors_replacer + """
-        
+
         /* Note: This is the reviewer screen, bottom bar, background color */
         body, #outer{
         background-color:""" + self.config.color_b + """;
         border-top-color:""" + self.config.color_b + """;
+        margin: 0 95px 0 95px;
         }
-        
+
         /* Note: This is the reviewer screen, bottom bar, text color of the plus signs */
         .stattxt{
             color:#bdbdbd;
         }
-        
+
         /* Note: This is the reviewer screen, bottom bar, text color of text (time until next review) located above Again, Hard, Easy, etc. buttons */
         .nobold{
             color:#888;
@@ -190,7 +192,7 @@ class ReviewerCards(Styler):
         {
             background-color:black!important;
             border-color:#444!important;
-            color:#eee!important
+            color:"""+ self.config.color_c +"""!important
         }
         .card input::selection{
             color: """ + self.config.color_t + """;
@@ -217,13 +219,13 @@ class ReviewerCards(Styler):
         img#star{
             -webkit-filter:invert(0%)!important
         }
-        
+
         # This is the answer text color for cloze cards.
         # Good red color: #ef5350
         .cloze{
-            color:#2196f3!important
+            color:"""+ self.config.color_p +"""!important
         }
-        
+
         a{
             color:#0099CC
         }
@@ -347,23 +349,6 @@ class AnkiWebViewStyler(Styler):
 
 
 
-class BrowserPackageStyler(Styler):
-
-    target = aqt.browser
-
-    # Note: This is Browse, highlight color of starred card in list
-    @replaces_in_night_mode
-    def COLOUR_MARKED(self):
-        return '#dedcfa'
-
-    # Note: This is Browse, highlight color of suspended card in list
-    @replaces_in_night_mode
-    def COLOUR_SUSPENDED(self):
-        return '#ededd5'
-
-
-
-
 class BrowserStyler(Styler):
 
     target = Browser
@@ -385,6 +370,8 @@ class BrowserStyler(Styler):
             browser.form.tableView.horizontalHeader().setStyleSheet(self.table_header)
 
             browser.form.searchEdit.setStyleSheet(self.search_box)
+            browser.form.searchEdit.setSizeAdjustPolicy(QtWidgets.QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLength)
+
             browser.form.searchButton.setStyleSheet(self.buttons.qt)
             browser.form.previewButton.setStyleSheet(self.buttons.qt)
 
@@ -394,16 +381,26 @@ class BrowserStyler(Styler):
         if browser._previewWindow:
             self.app.take_care_of_night_class(web_object=browser._previewWeb)
 
-    @wraps
-    def buildTree(self, browser):
+    @wraps(position='around')
+    def buildTree(self, browser, _old):
+        root = _old(browser)
+        if root: # For Anki 2.1.17++
+            return root
+        # ---------------------------
+        # For Anki 2.1.15--
         root = browser.sidebarTree
         for item in root.findItems('', Qt.MatchContains | Qt.MatchRecursive):
             icon = item.icon(0)
             pixmap = icon.pixmap(32, 32)
             image = pixmap.toImage()
-            image.invertPixels()
+            # image.invertPixels()
             new_icon = aqt.QIcon(QPixmap.fromImage(image))
             item.setIcon(0, new_icon)
+
+    @wraps
+    def setupSidebar(self, browser):
+        browser.sidebarTree.setStyleSheet(self.style)
+
 
     @wraps(position='around')
     def _cardInfoData(self, browser, _old):
@@ -424,32 +421,44 @@ class BrowserStyler(Styler):
                 """)
         return rep, cs
 
+
+    # Sidebar of Browse dialog
     @css
     def style(self):
         return """
+
         QSplitter::handle
         {
             /* handled below as QWidget */
         }
-        #""" + from_utf8("widget") + """, QTreeView
+        #""" + from_utf8("widget") + """,
+
+        /* SIDEBAR SPECIFICALLY */
+        QTreeView
         {
+            margin:20px 0 20px 20px;
+            border: 0px solid #bdbdbd;
+            border-right: 1px solid #bdbdbd;
+            min-width:160px;
+            font-family:"""+ customFont +""";
             """ + self.shared.colors + """
         }
         QTreeView::item:selected:active, QTreeView::branch:selected:active
         {
-            color: """ + self.config.color_t + """;
-                background-color:#ff0000;
+            color:#fff;
+                background-color:"""+ self.config.color_p +""";
         }
+        /* SELECTED BUT NOT ACTIVE, SO TEXT IS FADED; HAPPENS WHEN YOU SELECT ITEM THEN CLICK AWAY */
         QTreeView::item:selected:!active, QTreeView::branch:selected:!active
         {
-            color: """ + self.config.color_t + """;
-                background-color:#ffff00;
+            color: rgba(255, 255, 255, 0.8);
+                background-color:"""+ self.config.color_p +""";
         }
         """ + (
             """
             /* make the splitter light-dark (match all widgets as selecting with QSplitter does not work) */
             QWidget{
-                background-color:#fff;
+                background-color:"""+ self.config.color_b +""";
                 color: """ + self.config.color_t + """;
             }
             /* make sure that no other important widgets - like tags box - are light-dark */
@@ -461,52 +470,68 @@ class BrowserStyler(Styler):
             ''
         )
 
-    
-    
-    
-    # Browse styles: 1st is table of cards that can be selected, 2nd is the header of the table with each column header, 3rd is the search bar followed by more parts of the search bar.
+
+
+
+    # Browse styles:
+    # 1st (QTableView) is table of cards that can be selected.
+    # 2nd (QHeaderView) is the header of the table with each column header.
     @css
     def table(self):
         return f"""
             QTableView
             {{
-                margin:0 30px 30px 30px;
+                margin:10px 10px 20px 10px;
                 border-radius:10px;
                 border:1px solid #bdbdbd;
                 selection-color:#fff;
                 alternate-background-color:#f8f8f8;
-                gridline-color:#eee;
+                gridline-color:{self.config.color_c};
                 {self.shared.colors};
-                selection-background-color:#2196f3;
+                selection-background-color:{self.config.color_p};
                 font-family:%s;
             }}
             """ % (customFont)
 
+    # Background of header behind header text background = QHeaderView; the "color:" is for the currently sorted header's arrow
+    # Header text and its background = QHeaderView::section
     @css
     def table_header(self):
         return """
-            QHeaderView, QHeaderView::section
+            QHeaderView
+            {
+                background-color:"""+ self.config.color_b +""";
+                border-radius:15px 15px 0px 0px;
+                color:"""+ self.config.color_p +""";
+            }
+
+            QHeaderView::section
             {
                 """ + self.shared.colors + """
                         height:32px;
-                        background-color:#fff;
-                        border-radius:10px;
+                        background-color:"""+ self.config.color_b +""";
+                        border-radius:15px;
                         font-family:%s;
                         font-size:14px;
-                        padding-top:8px;
-                        padding-bottom:8px;
+                        color:#888;
             }
             """ % (customFont)
 
+
+
+
+    # Search bar = QComboBox
+    # Search icon = QComboBox::down-arrow
     @css
     def search_box(self):
         return """
-            
+
         QComboBox
         {
-            margin:30px 0px 30px 0px;
-            border:1px solid #bdbdbd;
-            background-color:#eeeeee;
+            margin:10px 0px 10px 0px;
+            border:0px solid #bdbdbd;
+            font-size:14px;
+            font-family:"""+ customFont +""";
             border-radius:20px;
             padding:10px 10px 10px 10px;
             """ + self.shared.colors + """
@@ -514,7 +539,7 @@ class BrowserStyler(Styler):
 
         QComboBox:!editable
         {
-        background:#eeeeee;
+        background:"""+ self.config.color_c +""";
         }
 
         QComboBox QAbstractItemView
@@ -522,15 +547,15 @@ class BrowserStyler(Styler):
             border:0px solid #bdbdbd;
             border-radius:10px 10px 10px 10px;
             """ + self.shared.colors + """
-            background:#fff
+            background:"""+ self.config.color_c +""";
         }
 
         QComboBox::drop-down, QComboBox::drop-down:editable
         {
             """ + self.shared.colors + """;
             margin-right:20px;
-            background:#fff;
-            border:0px solid #fff;
+            background:"""+ self.config.color_b +""";
+            border:0px solid """+ self.config.color_b +""";
             padding:10px 10px 10px 10px;
         }
 
@@ -541,6 +566,32 @@ class BrowserStyler(Styler):
             image: url('""" + self.app.icons.arrow + """')
         }
         """
+
+
+
+
+# Allows styling of sidebar in Browse dialog (necessary for Anki 2.1.17 and beyond)
+try:
+    from aqt.browser import SidebarModel
+
+    class SidebarModelStyler(Styler):
+
+        target = SidebarModel
+
+        @wraps(position='around')
+        def iconFromRef(self, sidebar_model, iconRef, _old):
+            icon = _old(sidebar_model, iconRef)
+            if icon:
+                pixmap = icon.pixmap(32, 32)
+                image = pixmap.toImage()
+                image.invertPixels()
+                new_icon = aqt.QIcon(QPixmap.fromImage(image))
+                return new_icon
+            return icon
+except ImportError:
+    pass
+
+
 
 
 class AddCardsStyler(Styler):
@@ -732,12 +783,17 @@ class EditorStyler(Styler):
     def encode_class_name(string):
         return "ID"+"".join(map(str, map(ord, string)))
 
+    # Tags background box on bottom of Editor screen
     @css
     def completer(self):
         return """
-            background-color:black;
-            border-color:#444;
-            color:#eee;
+            background-color:"""+ self.config.color_c +""";
+            border:1px solid #bdbdbd;
+            border-radius:8px;
+            height:auto;
+            padding:4px;
+            color:"""+ self.config.color_t +""";
+            font-family:"""+ customFont +""";
         """
 
     @css
@@ -765,20 +821,23 @@ class CardLayoutStyler(Styler):
 
 
 
-    
-    # Note: QTextEdit is used for the card code editor squares. Seen when you go to Browse, then click Cards button to edit a card, and then on the left side
+
+    # Browse>Cards (editing dialog)
+    # Header text above each editor box = QGroupBox:title
+    # Card code editor squares (left side of dialog) = QTextEdit; Seen when you go to Browse, then click Cards button to edit a card, and then on the left side
     @css
     def qt_style(self):
         return f"""
         QGroupBox::title
         {{
-            {self.shared.colors}
+            {self.shared.colors};
         }}
         QTextEdit
         {{
             color: {self.config.color_t};
-            background-color:#eeeeee;
+            background-color:{self.config.color_c};
             border-radius:10px;
+            border:1px solid #bdbdbd;
         }}
         """
 
@@ -795,6 +854,7 @@ class EditorWebViewStyler(Styler):
     }
 
     # TODO: currently restart is required for this to take effect after configuration change
+    # @style_tag affects the bottom half of the Browse dialog
     @appends_in_night_mode
     @style_tag
     @percent_escaped
@@ -803,12 +863,12 @@ class EditorWebViewStyler(Styler):
 
             custom_css = f"""
                 #topbuts {self.buttons.editorButtons};
-                
+
             #topbutsright button{{
                 padding: inherit;
                 margin-left: 1px;
             }}
-            
+
             #topbuts img{{
                 width:10px;
                 height:10px;
@@ -817,15 +877,33 @@ class EditorWebViewStyler(Styler):
                 -webkit-filter: invert(1)
                 */
             }}
-            
+
             a{{
-                background-color:#ff0000;
+                background-color:{self.config.color_c};
             }}
-            
-            html, body, #topbuts, .field, .fname, #topbutsOuter{{
+
+            html, .fname, #topbutsOuter{{
                 color: {self.config.color_t}!important;
                 background: {self.config.color_b}!important;
                 outline:none;
+            }}
+
+            #topbuts {{
+                background: {self.config.color_b};
+            }}
+
+            body {{
+                background:{self.config.color_b};
+                padding:10px 0 20px 0;
+            }}
+
+            .field {{
+                border:1px solid #bdbdbd;
+                border-radius:8px;
+                height:auto;
+                padding:4px;
+                color:"""+ self.config.color_t +""";
+                font-family:"""+ customFont +""";
             }}
             """
 
