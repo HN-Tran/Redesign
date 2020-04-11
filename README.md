@@ -3,6 +3,7 @@
 
 # Redesign Dark
 _updated 11/04/2020_  
+  
 A new look for [Anki](https://apps.ankiweb.net/).
 
 Based on and forked from https://github.com/nickdvlpr/Redesign to implement a **Dark** version. All credits go to Developer Nick and others mentioned in the "Credits" section, check the section "License" below.
