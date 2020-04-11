@@ -8,6 +8,14 @@ Based on and forked from https://github.com/nickdvlpr/Redesign to implement a **
 
 <br>
 
+### Installation guide
+
+https://ankiweb.net/shared/info/1914733489
+- Go to Anki and install the extension with the code __1914733489__
+- Download/Clone this repository
+- Copy/Paste and overwrite into the extension folder of "Redesign" (usually folder name is the same as code above)
+- Enjoy!
+
 ### License
 
 *Copyright © 2020 [Developer Nick](https://twitter.com/nickdvlpr)*
