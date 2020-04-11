@@ -3,7 +3,7 @@
 
 # Redesign Dark
 _updated 11/04/2020_  
-_Of course after several changes there are many fixes needed but for simple usage sufficient for now, maybe more updates coming soon_  
+_Known issues: Textbox and text in editor is white, more bugs are available from core (not in my power to fix it)_  
   
 A new look for [Anki](https://apps.ankiweb.net/).
 
