@@ -3,7 +3,7 @@ from .internals import css, snake_case, SingletonMetaclass, RequiringMixin
 
 
 
-color_primary = '#2196f3'
+
 customFont = "default"; # Set your desired font here.
 # Format is "Font Name With Spaces" (i.e. customFont="Times New Roman";)
 # Note: If you want to change this, you need to do so in three files: _init_.py, styles.py, and stylers.py
@@ -38,48 +38,45 @@ class SharedStyles(Style):
 
     @css
     def top(self):
-
         return """
-
-
+        
+        
         /* Note: This is Main screen, top bar, background color of full width (farthest back depth-wise) */
         body, #header{
         background-color:""" + self.config.color_b + """;
-        height:40px;
+        height:60px;
         }
-
+        
         /* Note: This is Main screen, top bar, curved card */
         curvedcard, #header{
-        background-color:"""+ self.config.color_c +""";
-        border-color:"""+ self.config.color_c +""";
-        border-radius: 0 0 10px 10px;
-        margin-top: 0;
-        padding:0 10px 0 10px;
+        background-color:#333;
+        border-color:#333;
+        border-radius: 0px 0px 10px 10px;
+        border-width:2px;
         width: auto;
         align: center;
         height: 35px;
-        box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
         }
-
-
+        
+        
         /* Note: This is Main screen, top bar, text color of buttons (color) and background color of buttons (background-color). background-color should be same as in curvedcard */
         .hitem{
-        background-color:""" + self.config.color_c + """;
+        background-color: #333;
         color:#888;
-        font-family:""" + customFont + """;
+        font-family:%s;
         font-weight:normal;
         padding: 0px 12px 0px 12px;
         transition: color .2s;
         }
         .hitem:hover{
         text-decoration: none;
-        color:""" + self.config.color_p + """;
+        color:#2196f3;
         }
-        """
+        """ %(customFont)
 
-
-
-
+    
+    
+    
     @css
     def menu(self):
         return """
@@ -113,9 +110,9 @@ class SharedStyles(Style):
         }
         """
 
-
-
-
+    
+    
+    
     @css
     def colors(self):
         return f'color: {self.config.color_t}; background-color: {self.config.color_b};'
@@ -136,7 +133,7 @@ class SharedStyles(Style):
         {
             color:#ff7043!important
         }
-
+        
         /* this color in particular is the blue for New cards remaining, seen once you click a deck and right before you start studying */
         font[color="#00a"]
         {
@@ -171,10 +168,10 @@ class ButtonsStyle(Style):
         padding: 8px 16px 8px 16px;
         transition: color .2s, background-color .2s, border-color .2s, padding .4s;
     """
-    hover = 'background-color:%s; color: #fff; border-color:%s; padding: 8px 20px 8px 20px;' %(color_primary, color_primary)
+    hover = 'background-color: #2196f3; color: #fff; border-color: #2196f3; padding: 8px 20px 8px 20px;'
     active = 'color: #fff;'
 
-
+    
     @css
     def qt(self):
         return self.advanced_qt() + (self.qt_scrollbars if self.config.style_scroll_bars else '')
@@ -185,30 +182,24 @@ class ButtonsStyle(Style):
         return """
         """ + restrict_to_parent + """ QPushButton""" + restrict_to + """
         {
-            background-color: """+ self.config.color_c +""";
+            background-color: #eee;
             border-radius:15px;
-            border: 1px solid #bdbdbd;
-            padding: 8px 16px 8px 16px;
             """ + self.idle + """
         }
         """ + restrict_to_parent + """ QPushButton""" + restrict_to + """:hover
         {
             """ + self.hover + """
-                background-color:"""+ self.config.color_p +"""; padding: 8px 16px 8px 16px;
+                background-color: #2196f3;
         }
-        """
-
-        + restrict_to_parent + """ QPushButton""" + restrict_to + """:pressed
+        """ + restrict_to_parent + """ QPushButton""" + restrict_to + """:pressed
         {
             """ + self.active + """
-                background-color:"""+ self.config.color_p +""";
+                background-color: #2196f3;
         }
-        """
-
-        + restrict_to_parent + """ QPushButton""" + restrict_to + """:disabled
+        """ + restrict_to_parent + """ QPushButton""" + restrict_to + """:disabled
         {
             """ + self.active + """
-                background-color:"""+ self.config.color_b +""";
+                background-color: #bdbdbd;
         }
         """ + restrict_to_parent + """ QPushButton""" + restrict_to + """:focus
         {
@@ -216,15 +207,10 @@ class ButtonsStyle(Style):
         }
         """
 
-
-
-
-    # Scrollbar colors are only used if "Dark scrollbars" is enabled
     scrollbar_size = 15
-    scrollbar_background = '{self.config.color_b}'
-    scrollbar_color = '#eeeeee'
+    scrollbar_background = '#313d45'
+    scrollbar_color = '#515d71'
 
-    # Scrollbar style for Browse window table and other dialogs
     @css
     def qt_scrollbars(self):
         return f"""
@@ -247,8 +233,8 @@ class ButtonsStyle(Style):
             height: {self.scrollbar_size}px;
         }}
         QScrollBar::handle {{
-            margin: 4px 0 0 4px;
-            border-radius: 5px
+            margin: 4px;
+            border-radius: 3px
         }}
         QScrollBar::handle:vertical {{
             min-height: 20px;
@@ -267,7 +253,6 @@ class ButtonsStyle(Style):
         }}
         """
 
-    # Scrollbar style for main Decks page
     @css
     def scrollbars(self):
         return f"""
@@ -282,7 +267,7 @@ class ButtonsStyle(Style):
         }}
         ::-webkit-scrollbar-thumb {{
             background: {self.scrollbar_color};
-            border-radius: 20px;
+            border-radius: 4px;
         }}
         """
 
@@ -292,44 +277,45 @@ class ButtonsStyle(Style):
         button
         {{
             { self.idle }
-            background:{self.config.color_c};
-            border:0px {self.config.color_c};
+            background:#333;
+            border-color:#333;
             margin: 8px;
             border-radius: 40px;
             font-family:%s;
             outline: none;
-            box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
         }}
         button:hover
         {{
             { self.hover }
-            background-color:{self.config.color_p};
-            border-color:{self.config.color_p};
+            background-color: #2196f3);
         }}
         button:active
         {{
             { self.active }
-            background:{self.config.color_p};
+            background: #2196f3;
         }}
-            """ %(customFont) + (self.scrollbars if self.config.style_scroll_bars else '')
+            """ % (customFont)
+
+    # The commented out code below used to immediately follow the """ above before the "% (customFont)" line was added. However, the customFont did not work with this so I simply commented out the line.
+    # + (self.scrollbars if self.config.style_scroll_bars else '')
 
 
-
+    
     # Button style for Editor portion (bottom half) of Browse window. This style surrounds the bold, italics, etc. buttons.
     @css
     def editorButtons(self):
         return f"""
             button{{
-                { self.idle }
-                width:auto;
-                height:auto;
-                background:{self.config.color_c};
-                border:1px solid #bdbdbd;
-                margin:2px;
-                padding: 4px 8px 4px 8px;
-                border-radius: 40px;
-                font-family:%s;
-                outline: none;
+            { self.idle }
+            width:auto;
+            height:auto;
+            background:#eee;
+            border-color:#eee;
+            margin:2px;
+            padding: 4px 8px 4px 8px;
+            border-radius: 40px;
+            font-family:%s;
+            outline: none;
             }}
             """ % (customFont)
 
@@ -367,7 +353,7 @@ class DeckStyle(Style):
             color:#0099CC;
             font-family:""" + customFont + """;
         }
-
+        
         a.deck {
             text-transform: none;
             font-size: 15px;
@@ -381,14 +367,14 @@ class DeckStyle(Style):
         a.deck:hover {
             text-decoration: none;
             color:#fff;
-            background-color:""" + self.config.color_p + """;
+            background-color:#2196f3;
             border-radius: 50px;
-            border-color:""" + self.config.color_p + """;
+            border-color: #2196f3;
             width: auto;
             height: auto;
             padding:6px 16px 6px 16px;
         }
-
+        
         tr.deck td{
             height:35px;
             border-bottom-color:""" + self.config.color_b + """;
@@ -407,16 +393,16 @@ class DeckStyle(Style):
             height:35px;
             font-family:""" + customFont + """;
         }
-
+        
         /* the plus or minus sign for collapsing decks */
         .collapse{
             color:#212121;
             font-family:""" + customFont + """;
             padding-right: 8px;
         }
-
-
-
+        
+        
+        
         /* text at top saying Deck, Due, and New, this does the font family */
         /* Note: changes here also affect the deck names text too, so you have to add the same properties to a.deck (above) */
         tr {
@@ -425,8 +411,8 @@ class DeckStyle(Style):
             text-transform: uppercase;
             font-size: 13px;
         }
-
-
+        
+        
         .decktd {
             text-decoration: none;
             border-radius: 50px;
@@ -438,14 +424,14 @@ class DeckStyle(Style):
             background-color:""" + self.config.color_b + """;
             border-radius: 50px;
         }
-
+        
         .filtered{
             color:#00AAEE!important
             font-family:""" + customFont + """;
         }
+        
 
-
-
+    
         .gears{
             padding-left:32px;
             padding-right:16px;
@@ -453,7 +439,7 @@ class DeckStyle(Style):
             height: 1em;
             opacity: .5;
         }
-
+    
         """
 
 
