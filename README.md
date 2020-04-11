@@ -17,6 +17,7 @@ https://ankiweb.net/shared/info/1914733489
 - Go to Anki and install the extension with the code __1914733489__
 - Download/Clone this repository
 - Copy&Paste and overwrite into the extension folder of "Redesign" (usually folder name is the same as code above)
+- If nothing has changed, go to View > Redesign > Reset background and text colors
 - Enjoy!
 
 ### License
