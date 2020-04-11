@@ -2,8 +2,9 @@
 ![Picture2](/screenshots/main.jpg)
 
 # Redesign Dark
-_updated 11/04/2020_  
+_updated 11/04/2020, tested on Anki version 2.1.21_  
 _Known issues: Textbox and text in editor is white, more bugs are available from core (not in my power to fix it)_  
+_For now only recommended for studying, but not for creating cards! Workaround: Press Ctrl+N to switch back to normal Anki layout!_  
   
 A new look for [Anki](https://apps.ankiweb.net/).
 
